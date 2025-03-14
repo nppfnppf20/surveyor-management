@@ -15,7 +15,6 @@ export default defineConfig({
     port: 4000,
     host: true
   },
-  base: process.env.NODE_ENV === 'production' ? '/surveyor-management/' : '/',
   build: {
     outDir: 'dist',
     sourcemap: true

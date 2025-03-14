@@ -1,52 +1,54 @@
-# Surveyor Management System
+# Survey Management System
 
-A web-based system for managing surveyor quotes, projects, and scheduling. Built with React and Material-UI.
+A web-based application for managing survey quotes, projects, and calendar events. Built with React and Material-UI.
 
 ## Features
 
 - Quote Management
-- Project Tracking
-- Interactive Calendar
-- Surveyor Performance Reviews
-- File Management
-- Multi-date Site Visit Planning
+  - Add, edit, and track survey quotes
+  - Line item management with pricing
+  - Quote status tracking
 
-## Setup
+- Project Management
+  - Track instructed surveys
+  - Manage site visit dates
+  - Monitor project status and deadlines
 
-1. Clone the repository:
-```bash
-git clone [your-repository-url]
-```
+- Calendar View
+  - Visual calendar for tracking events
+  - Site visit scheduling
+  - Deadline management
+  - Custom notes and reminders
 
+- Project Information
+  - Detailed project specifications
+  - File management system
+  - Document organization
+
+- Surveyor Review System
+  - Performance tracking
+  - Quality assessment
+  - Responsiveness monitoring
+
+## Getting Started
+
+1. Clone the repository
 2. Install dependencies:
-```bash
-yarn install
-```
-
+   ```bash
+   npm install
+   ```
 3. Start the development server:
-```bash
-yarn dev
-```
+   ```bash
+   npm start
+   ```
 
-4. Build for production:
-```bash
-yarn build
-```
+## Technologies Used
 
-## Development
-
-This project uses:
-- React for the UI
-- Material-UI for components
-- Vite as the build tool
-
-## Deployment
-
-The site is configured to deploy to GitHub Pages. To deploy:
-
-1. Push changes to the main branch
-2. GitHub Actions will automatically build and deploy the site
+- React
+- Material-UI
+- JavaScript
+- HTML/CSS
 
 ## License
 
-[MIT License](LICENSE) 
+MIT License 
