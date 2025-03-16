@@ -732,88 +732,6 @@ function NotesDialog({ open, onClose, notes, onSave }) {
   );
 }
 
-// Add this component before the App component
-function SiteVisitDatesDialog({ open, onClose, projectId, dates, onSave }) {
-  const [visitDates, setVisitDates] = React.useState(dates || []);
-
-  const handleAddDate = () => {
-    setVisitDates([...visitDates, '']);
-  };
-
-  const handleDateChange = (index, value) => {
-    const newDates = [...visitDates];
-    newDates[index] = value;
-    setVisitDates(newDates);
-  };
-
-  const handleRemoveDate = (index) => {
-    setVisitDates(visitDates.filter((_, i) => i !== index));
-  };
-
-  const handleSave = () => {
-    onSave(projectId, visitDates.filter(date => date));
-    onClose();
-  };
-
-  return React.createElement(Dialog, {
-    open,
-    onClose,
-    maxWidth: 'sm',
-    fullWidth: true
-  },
-    React.createElement(DialogTitle, null, 'Site Visit Dates'),
-    React.createElement(DialogContent, null,
-      React.createElement(Box, {
-        sx: { 
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          mt: 2
-        }
-      },
-        visitDates.map((date, index) =>
-          React.createElement(Box, {
-            key: index,
-            sx: {
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }
-          },
-            React.createElement(TextField, {
-              type: 'date',
-              value: date,
-              onChange: (e) => handleDateChange(index, e.target.value),
-              size: 'small',
-              fullWidth: true,
-              InputLabelProps: { shrink: true }
-            }),
-            React.createElement(IconButton, {
-              onClick: () => handleRemoveDate(index),
-              size: 'small',
-              sx: { color: 'error.main' }
-            }, '×')
-          )
-        ),
-        React.createElement(Button, {
-          onClick: handleAddDate,
-          startIcon: '+',
-          sx: { mt: 1 }
-        }, 'Add Date')
-      )
-    ),
-    React.createElement(DialogActions, null,
-      React.createElement(Button, {
-        onClick: onClose
-      }, 'Cancel'),
-      React.createElement(Button, {
-        variant: 'contained',
-        onClick: handleSave
-      }, 'Save')
-    )
-  );
-}
-
 // Basic React component
 function App() {
   const [tabValue, setTabValue] = React.useState(0);
@@ -830,8 +748,6 @@ function App() {
   const [reviews, setReviews] = React.useState({});
   const [notesDialogOpen, setNotesDialogOpen] = React.useState(false);
   const [selectedProject, setSelectedProject] = React.useState(null);
-  const [siteVisitDatesDialogOpen, setSiteVisitDatesDialogOpen] = React.useState(false);
-  const [selectedProjectForDates, setSelectedProjectForDates] = React.useState(null);
   
   // Calculate first day of month for calendar
   const firstDayOfMonth = new Date(
@@ -1111,19 +1027,6 @@ function App() {
     );
   };
 
-  // Add new handler for saving multiple dates
-  const handleSaveVisitDates = (projectId, dates) => {
-    setProjects(projects.map(project => 
-      project.id === projectId 
-        ? { 
-            ...project, 
-            siteVisitDate: dates[0] || '', // Keep first date in main field
-            additionalVisitDates: dates.slice(1) // Store additional dates
-          }
-        : project
-    ));
-  };
-
   return React.createElement(Container, { maxWidth: 'xl' },
     // Tabs
     React.createElement(Box, { 
@@ -1334,18 +1237,6 @@ function App() {
           notes: selectedProject?.notes || '',
           onSave: (newNotes) => handleNotesChange(selectedProject.id, newNotes)
         }),
-        React.createElement(SiteVisitDatesDialog, {
-          open: siteVisitDatesDialogOpen,
-          onClose: () => {
-            setSiteVisitDatesDialogOpen(false);
-            setSelectedProjectForDates(null);
-          },
-          projectId: selectedProjectForDates?.id,
-          dates: selectedProjectForDates ? 
-            [selectedProjectForDates.siteVisitDate, ...(selectedProjectForDates.additionalVisitDates || [])]
-            : [],
-          onSave: handleSaveVisitDates
-        }),
         React.createElement(TableContainer, null,
           React.createElement(Table, { size: 'small' },
             React.createElement(TableHead, null,
@@ -1375,19 +1266,11 @@ function App() {
                     React.createElement(Box, {
                       sx: {
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
-                        gap: 1
+                        gap: 1,
+                        justifyContent: 'center'
                       }
                     },
-                      React.createElement(Typography, {
-                        variant: 'caption',
-                        sx: { 
-                          fontWeight: 'medium',
-                          color: 'text.secondary',
-                          mb: 0.5
-                        }
-                      }, 'Site Visit Date'),
                       React.createElement(TextField, {
                         type: 'date',
                         value: project.siteVisitDate,
@@ -1400,8 +1283,7 @@ function App() {
                         sx: {
                           display: 'flex',
                           alignItems: 'center',
-                          gap: 0.5,
-                          mt: 0.5
+                          gap: 0.5
                         }
                       },
                         React.createElement('input', {
@@ -1409,42 +1291,17 @@ function App() {
                           id: `multiple-dates-${project.id}`,
                           checked: project.multipleDates || false,
                           onChange: (e) => {
-                            const isChecked = e.target.checked;
                             setProjects(projects.map(p => 
                               p.id === project.id 
-                                ? { ...p, multipleDates: isChecked }
+                                ? { ...p, multipleDates: e.target.checked }
                                 : p
                             ));
-                            if (isChecked) {
-                              setSelectedProjectForDates(project);
-                              setSiteVisitDatesDialogOpen(true);
-                            }
                           }
                         }),
                         React.createElement('label', {
                           htmlFor: `multiple-dates-${project.id}`,
-                          style: { 
-                            fontSize: '0.75rem',
-                            color: 'rgba(0, 0, 0, 0.6)'
-                          }
-                        }, 'Multiple Site Visit Dates'),
-                        project.additionalVisitDates && project.additionalVisitDates.length > 0 && 
-                          React.createElement(Typography, {
-                            variant: 'caption',
-                            sx: { 
-                              color: 'text.secondary',
-                              fontSize: '0.75rem',
-                              mt: 0.5,
-                              cursor: 'pointer',
-                              '&:hover': {
-                                textDecoration: 'underline'
-                              }
-                            },
-                            onClick: () => {
-                              setSelectedProjectForDates(project);
-                              setSiteVisitDatesDialogOpen(true);
-                            }
-                          }, `+ ${project.additionalVisitDates.length} more dates`)
+                          style: { fontSize: '0.875rem' }
+                        }, 'Multiple Dates')
                       )
                     )
                   ),
@@ -1571,7 +1428,6 @@ function App() {
             margin: '0 auto',
             '& > *': {
               aspectRatio: '1',
-              height: '120px' // Fixed height for all boxes
             }
           }
         },
@@ -1584,7 +1440,6 @@ function App() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 aspectRatio: 'unset',
-                height: 'auto !important', // Override fixed height for header
                 pb: 1
               }
             },
@@ -1631,7 +1486,7 @@ function App() {
                         isToday ? '#e3f2fd' : 
                         isCurrentMonth ? 'white' : '#f5f5f5',
                 opacity: isCurrentMonth ? 1 : 0.5,
-                height: '100%', // Fill the fixed height container
+                overflow: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 0.5,
