@@ -27,7 +27,7 @@ import {
   Chip,
   useTheme,
 } from '@mui/material';
-import { DatePicker, DateCalendar, PickersDay, PickersDayProps, StaticDatePicker } from '@mui/x-date-pickers';
+import { DatePicker, PickersDay, PickersDayProps, StaticDatePicker } from '@mui/x-date-pickers';
 import { Surveyor, Quote, Project, TimelineEvent } from './types';
 import { isSameDay, addMonths } from 'date-fns';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -89,8 +89,9 @@ const App: React.FC = () => {
   // Dialog states
   const [newSurveyor, setNewSurveyor] = useState<Partial<Surveyor>>({});
   const [newQuote, setNewQuote] = useState<Partial<Quote>>({});
+  const [dialogType, setDialogType] = useState<'surveyor' | 'quote' | 'project'>('surveyor');
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (newValue: number) => {
     setTabValue(newValue);
   };
 
