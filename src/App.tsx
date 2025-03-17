@@ -17,8 +17,6 @@ import {
   Tab,
   Tabs,
   Badge,
-  Checkbox,
-  FormControlLabel,
   MenuItem,
   Table,
   TableBody,
@@ -28,12 +26,10 @@ import {
   TableRow,
   Chip,
   useTheme,
-  IconButton,
-  Tooltip
 } from '@mui/material';
 import { DatePicker, DateCalendar, PickersDay, PickersDayProps, StaticDatePicker } from '@mui/x-date-pickers';
 import { Surveyor, Quote, Project, TimelineEvent } from './types';
-import { isSameDay, addDays, addMonths, format } from 'date-fns';
+import { isSameDay, addMonths } from 'date-fns';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingIcon from '@mui/icons-material/Pending';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -93,8 +89,6 @@ const App: React.FC = () => {
   // Dialog states
   const [newSurveyor, setNewSurveyor] = useState<Partial<Surveyor>>({});
   const [newQuote, setNewQuote] = useState<Partial<Quote>>({});
-  const [newProject, setNewProject] = useState<Partial<Project>>({});
-  const [dialogType, setDialogType] = useState<'surveyor' | 'quote' | 'project'>('surveyor');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
