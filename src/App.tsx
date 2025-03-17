@@ -91,7 +91,7 @@ const App: React.FC = () => {
   const [newQuote, setNewQuote] = useState<Partial<Quote>>({});
   const [dialogType] = useState<'surveyor' | 'quote' | 'project'>('surveyor');
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
